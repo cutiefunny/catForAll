@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2",
+    "image-downloader": "^4.0.3",
+    "moment": "^2.29.1",
+    "mongodb": "^4.2.2",
+    "node-cron": "^3.0.0",
+    "pug": "^3.0.2"
+  }
+}

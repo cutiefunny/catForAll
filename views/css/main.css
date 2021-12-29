@@ -1,0 +1,71 @@
+.topAlign{
+    vertical-align: top;
+}
+
+.fatigue{
+  color:gray;
+  font-weight: bold;
+}
+
+.energy{
+  color:#21ba45;
+  font-weight: bold;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.big{
+  font-weight: bold;
+  font-size: x-large;
+}
+
+.condition{
+  color:#00b5ad;
+  font-weight: bold;
+}
+
+th{
+    background-color: lightgrey;
+    padding: 5px;
+}
+
+.right{
+    font-weight: bold;
+    text-align: right;
+}
+.left{
+    font-weight: bold;
+    text-align: left;
+}
+
+.center{
+    text-align: center;
+}
+
+.box{
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(245, 245, 245);
+    background-color: rgb(245, 245, 245);
+    width : 300px;
+    padding: 10px;
+    border-radius: 20px 20px 20px 20px;
+  }
+
+  .hide{
+    display:none;
+    opacity: 0;
+  }
+
+  .appear {
+    animation: fade-in 1s;
+    animation-fill-mode: forwards;
+    display: flex;
+  }
+  
+  .disappear {
+    animation: fade-out 1s;
+    animation-fill-mode: forwards;
+  }

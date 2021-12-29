@@ -1,0 +1,35 @@
+html 
+    head 
+        title=title 
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css")
+        link(rel='stylesheet', href='/views/css/main.css')
+        script(src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=cutiefunny")
+    body
+        i#menu.list.icon.big(onclick="clickMenu()" style="visibility:visible")
+        #div_sideBar.ui.left.demo.vertical.inverted.sidebar.labeled.icon.menu
+            a.item
+                i.home.icon
+                Home
+            a.item
+                i.block.layout.icon
+                Topics
+            a.item
+                i.smile.icon
+                Friends
+        center
+            H1= title 
+            H2= name
+            img#img_main(src="/images/"+name width=320 onclick="")
+            P
+            button.ui.positive.button(value=name onclick="clickNext(this.value)") Get
+            | 
+            button.ui.negative.button(value=name onclick="clickNext(this.value)") Pass
+            |
+            #map(style="width:100%;height:400px;")
+            //-img#img_main(src="/images/"+file onclick="change()")
+    script(src="//code.jquery.com/jquery-1.11.0.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js")
+    script(src="/script/main.js")
+    script(src="/script/callAjax.js")
