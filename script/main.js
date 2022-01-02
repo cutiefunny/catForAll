@@ -2,6 +2,7 @@
 var menu = document.getElementById("menu");
 var div_sideBar = document.getElementById("div_sideBar");
 var img_main = document.getElementById("img_main");
+var img_name = document.getElementById("img_name");
 //#endregion
 
 //페이지 시작 시 수행되는 함수
@@ -15,9 +16,26 @@ function change(){ callAjax("change") }
 function clickThumb(src){ img_main.setAttribute("src",src); }
 function clickNext(name) { alert(name); }
 
+var HOME_PATH = window.HOME_PATH || '.';
+var position = new naver.maps.LatLng(37.3849483, 127.1229117);
+
 var mapOptions = {
-    center: new naver.maps.LatLng(37.3595704, 127.105399),
+    center: position,
     zoom: 10
 };
 
 var map = new naver.maps.Map('map', mapOptions);
+
+var markerOptions = {
+    position: position.destinationPoint(90, 15),
+    map: map,
+    icon: {
+        url: 'http://localhost:8002/images/'+img_name.getAttribute('value'),
+        //size: new naver.maps.Size(50, 52),
+        scaledSize: new naver.maps.Size(50, 52),
+        origin: new naver.maps.Point(0, 0),
+        anchor: new naver.maps.Point(25, 26)
+    }
+};
+
+var marker = new naver.maps.Marker(markerOptions);
