@@ -30,7 +30,7 @@ var markerOptions = {
     position: position.destinationPoint(90, 15),
     map: map,
     icon: {
-        url: 'http://localhost:8002/images/'+img_name.getAttribute('value'),
+        url: HOME_PATH+'/images/'+img_name.getAttribute('value'),
         //size: new naver.maps.Size(50, 52),
         scaledSize: new naver.maps.Size(50, 52),
         origin: new naver.maps.Point(0, 0),
