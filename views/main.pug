@@ -20,14 +20,10 @@ html
                 Friends
         center
             H1= title 
-            H2= name
             input#img_name(type='hidden', value=name)
-            img#img_main(src="/images/"+name width=320 onclick="")
             P
-            button.ui.positive.button(value=name onclick="clickNext(this.value)") Get
-            | 
-            button.ui.negative.button(value=name onclick="clickNext(this.value)") Pass
-            |
+            each file in filelist 
+                input(name='file' type='hidden', value=file)
             P
             #map(style="width:400px;height:400px;")
             //-img#img_main(src="/images/"+file onclick="change()")
