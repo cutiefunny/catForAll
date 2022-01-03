@@ -56,8 +56,8 @@ function setMarkers(filelist){
     filelist.forEach(file => {
         x=file.getAttribute("value").split("_")[0];
         y1=file.getAttribute("value").split("_")[1];
-        y2=y1.split(".")[0];
-        y3=y1.split(".")[1];
+        y2=y1.toString().split(".")[0];
+        y3=y1.toString().split(".")[1];
         y=y1+"."+y2;
 
         position = new naver.maps.LatLng(x, y);
