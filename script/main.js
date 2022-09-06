@@ -25,8 +25,13 @@ const upload = new Upload({
 
 const uploadFile = upload.createFileInputHandler({
     onUploaded: ({ fileUrl, fileId }) => {
-        alert(`File uploaded! ${fileUrl}`);
-        uploaded.setAttribute("src",fileUrl);
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            var latitude = pos.coords.latitude;
+            var longitude = pos.coords.longitude;
+            alert("현재 위치는 : " + latitude + ", "+ longitude);
+        });
+        //alert(`File uploaded! ${fileUrl}`);
+        //uploaded.setAttribute("src",fileUrl);
     }
 });
 
