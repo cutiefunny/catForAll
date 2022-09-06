@@ -27,7 +27,12 @@ html
             P
             #map(style="width:400px;height:400px;")
             //-img#img_main(src="/images/"+file onclick="change()")
+            P 
+            input(type="file" onChange="uploadFile(event)")
+            P
+            img#uploaded(src="https://upcdn.io/12a1xpG4qrAHUuVMXt5z3p6" style="width:400px;")
     script(src="//code.jquery.com/jquery-1.11.0.min.js")
+    script(src="https://js.upload.io/upload-js/v1")
     script(src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js")
     script(src="/script/main.js")
     script(src="/script/callAjax.js")

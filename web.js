@@ -39,4 +39,7 @@ app.get('/', router.main);
 //ajax 컨트롤러
 app.post('/ajax', ajax.controller);
 
+//upload image
+app.post('/upload', router.uploadImg)
+
 //#endregion

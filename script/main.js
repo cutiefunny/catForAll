@@ -3,6 +3,7 @@ var menu = document.getElementById("menu");
 var div_sideBar = document.getElementById("div_sideBar");
 var img_main = document.getElementById("img_main");
 var img_name = document.getElementById("img_name");
+var uploaded = document.getElementById("uploaded");
 var filelist = document.getElementsByName("file");
 //#endregion
 
@@ -16,6 +17,18 @@ function clickMenu(){ $('.ui.labeled.icon.sidebar').sidebar('toggle'); }
 function change(){ callAjax("change") }
 function clickThumb(src){ img_main.setAttribute("src",src); }
 function clickNext(name) { alert(name); }
+
+const upload = new Upload({
+    // This is your API key:
+    apiKey: "public_12a1xpGGbbJh2u6J1eqbru3zEWSp"
+})
+
+const uploadFile = upload.createFileInputHandler({
+    onUploaded: ({ fileUrl, fileId }) => {
+        alert(`File uploaded! ${fileUrl}`);
+        uploaded.setAttribute("src",fileUrl);
+    }
+});
 
 let markers = new Array();
 

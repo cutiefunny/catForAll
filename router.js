@@ -1,5 +1,9 @@
 const CRUD= require("./CRUD");
 const fs = require('fs');
+const { Uploader } = require("uploader");
+const uploader = new Uploader({
+  apiKey: "free"
+});
 
 exports.main = function(req,res) {
 
@@ -18,4 +22,8 @@ exports.main = function(req,res) {
 function getCat(fileList){
     var index = Math.floor(Math.random()*fileList.length);
     return fileList[index];
+}
+
+exports.uploadImg = function(req,res) {
+    uploader.open().then(files => alert(JSON.stringify(files)));
 }
