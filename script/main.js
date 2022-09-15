@@ -68,7 +68,7 @@ function onSuccessGeolocation(position) {
 
     //infowindow.setContent('<div style="padding:20px;">' + 'geolocation.getCurrentPosition() 위치' + '</div>');
 
-    infowindow.open(map, location);
+    //infowindow.open(map, location);
     console.log('Coordinates: ' + location.toString());
 }
 
