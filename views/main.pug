@@ -22,8 +22,11 @@ html
             H1= title 
             input#img_name(type='hidden', value=name)
             P
-            each file in filelist 
-                input(name='file' type='hidden', value=file)
+            each photo in photos 
+                input(name='time' type='hidden', value=photo.time)
+                input(name='latitude' type='hidden', value=photo.latitude)
+                input(name='longitude' type='hidden', value=photo.longitude)
+                input(name='fileUrl' type='hidden', value=photo.fileUrl)
             P
             #map(style="width:380px;height:380px;")
             //-img#img_main(src="/images/"+file onclick="change()")
@@ -31,6 +34,7 @@ html
             input(type="file" onChange="uploadFile(event)")
             P
             img#uploaded(src="https://upcdn.io/12a1xpG4qrAHUuVMXt5z3p6" style="width:380px;")
+            input(type='hidden' id='deviceID' value=deviceID)
     script(src="//code.jquery.com/jquery-1.11.0.min.js")
     script(src="https://js.upload.io/upload-js/v1")
     script(src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js")

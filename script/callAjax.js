@@ -1,5 +1,5 @@
 //Ajax 함수
-function callAjax(op) {
+function callAjax(op,latitude,longitude,deviceID,fileUrl,fileId) {
 
     $.ajax({
         url: '/ajax',
@@ -8,11 +8,17 @@ function callAjax(op) {
         data: { 
             msg : "test"
             , op : op
+            , latitude : latitude
+            , longitude : longitude
+            , deviceID : deviceID
+            , fileUrl : fileUrl
+            , fileId : fileId
+            //latitude,longitude,deviceID,fileUrl,fileId
         },
         success: function(result) {
             //테스트
-            if ( result['result'] == "change" ) {  
-                img_main.setAttribute("src","/images/"+result['filename']);
+            if ( result['result'] == "upload" ) {  
+                uploaded.setAttribute("src",result['fileUrl']);
             }else if( result['result'] == "face1" ) {
                 span_sub.className = "bold";
                 span_sub.innerText = "밥줘!!";

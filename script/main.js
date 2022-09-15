@@ -4,12 +4,25 @@ var div_sideBar = document.getElementById("div_sideBar");
 var img_main = document.getElementById("img_main");
 var img_name = document.getElementById("img_name");
 var uploaded = document.getElementById("uploaded");
-var filelist = document.getElementsByName("file");
+var time = document.getElementsByName("time");
+var lat = document.getElementsByName("latitude");
+var long = document.getElementsByName("longitude");
+var url = document.getElementsByName("fileUrl");
+var deviceID = document.getElementById("deviceID").getAttribute('value');
 //#endregion
 
 //페이지 시작 시 수행되는 함수
 window.onload = function(){
-    setMarkers(filelist);
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation);
+    } else {
+        var center = map.getCenter();
+        infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
+        infowindow.open(map, center);
+    }
+    
+    setMarkers(time,lat,long,url);
+    
 };
 
 //메뉴 클릭
@@ -26,9 +39,8 @@ const upload = new Upload({
 const uploadFile = upload.createFileInputHandler({
     onUploaded: ({ fileUrl, fileId }) => {
         navigator.geolocation.getCurrentPosition(function(pos) {
-            var latitude = pos.coords.latitude;
-            var longitude = pos.coords.longitude;
-            alert("현재 위치는 : " + latitude + ", "+ longitude);
+            callAjax("upload",pos.coords.latitude, pos.coords.longitude, deviceID,fileUrl,fileId);
+            //latitude,longitude,deviceID,fileUrl,fileId
         });
         //alert(`File uploaded! ${fileUrl}`);
         //uploaded.setAttribute("src",fileUrl);
@@ -38,53 +50,47 @@ const uploadFile = upload.createFileInputHandler({
 let markers = new Array();
 
 var HOME_PATH = window.HOME_PATH || '.';
-var position = new naver.maps.LatLng(37.546219, 126.919683);
 
-var mapOptions = {
-    center: position,
-    zoom: 17
-};
+var map = new naver.maps.Map('map', {
+    center: new naver.maps.LatLng(37.5666805, 126.9784147),
+    zoom: 10,
+    mapTypeId: naver.maps.MapTypeId.NORMAL
+});
 
-var map = new naver.maps.Map('map', mapOptions);
+var infowindow = new naver.maps.InfoWindow();
 
-var markerOptions = {
-    position: position.destinationPoint(0, 0),
-    map: map,
-    icon: {
-        url: HOME_PATH+'/images/'+img_name.getAttribute('value'),
-        //size: new naver.maps.Size(50, 52),
-        scaledSize: new naver.maps.Size(map.zoom*3, map.zoom*3),
-        origin: new naver.maps.Point(0, 0),
-        anchor: new naver.maps.Point(25, 26)
-    }
-};
+function onSuccessGeolocation(position) {
+    var location = new naver.maps.LatLng(position.coords.latitude,
+                                         position.coords.longitude);
 
-var marker = new naver.maps.Marker(markerOptions);
+    map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
+    map.setZoom(10); // 지도의 줌 레벨을 변경합니다.
 
-markers.push(marker);
+    //infowindow.setContent('<div style="padding:20px;">' + 'geolocation.getCurrentPosition() 위치' + '</div>');
 
-function setMarkers(filelist){
+    infowindow.open(map, location);
+    console.log('Coordinates: ' + location.toString());
+}
 
-    var x;
-    var y;
-    var y1;
-    var y2;
-    var y3;
+function onErrorGeolocation() {
+    var center = map.getCenter();
 
-    filelist.forEach(file => {
-        x=file.getAttribute("value").split("_")[0];
-        y1=file.getAttribute("value").split("_")[1];
-        y2=y1.toString().split(".")[0];
-        y3=y1.toString().split(".")[1];
-        y=y1+"."+y2;
+    infowindow.setContent('<div style="padding:20px;">' +
+        '<h5 style="margin-bottom:5px;color:#f00;">Geolocation failed!</h5>'+ "latitude: "+ center.lat() +"<br />longitude: "+ center.lng() +'</div>');
 
-        position = new naver.maps.LatLng(x, y);
+    infowindow.open(map, center);
+}
+
+function setMarkers(time,lat,long,url){
+    var cnt = 0;
+    time.forEach(element => {
+        position = new naver.maps.LatLng(lat[cnt].getAttribute("value"), long[cnt].getAttribute("value"));
 
         var markerOptions = {
             position: position.destinationPoint(0, 0),
             map: map,
             icon: {
-                url: HOME_PATH+'/images/'+file.getAttribute("value"),
+                url: url[cnt].getAttribute("value"),
                 // scaledSize: new naver.maps.Size(50, 52),
                 scaledSize: new naver.maps.Size(map.zoom*3, map.zoom*3),
                 origin: new naver.maps.Point(0, 0),
@@ -95,5 +101,6 @@ function setMarkers(filelist){
         var marker = new naver.maps.Marker(markerOptions);
         
         markers.push(marker);
+        cnt++;
     });
 }
