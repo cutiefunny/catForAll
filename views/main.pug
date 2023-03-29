@@ -23,9 +23,9 @@ html
             H1= title 
             input#img_name(type='hidden', value=name)
             P 
-            input.ui.button.mini(type="file", id="uploadImg", name="uploadImg")
-            button.ui.button.active(onclick="showMap()")
-                i.upload.icon
+            input.ui.button.mini(type="file", id="uploadImg", name="uploadImg",onchange="showMap()")
+            //- button.ui.button.active(onclick="showMap()")
+            //-     i.upload.icon
             P
             each photo in photos 
                 img(src=photo.link,width="80%")
