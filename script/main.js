@@ -63,7 +63,7 @@ function uploadImage(lat,long,address){
 function deleteImage(obj){
     if(confirm("삭제하실거냥?")){
         var createTm = obj.getAttribute("id");
-        callAjaxImage("deleteImage",createTm);
+        callAjaxImage("deleteImage",{createTm:createTm});
     }
 }
 
