@@ -20,5 +20,13 @@ exports.searchData = async function (op,col,param){
 //Create
 exports.createData = function (op,col,doc){
   var collection = db.collection(col);
-  if(op=="upload") collection.insertOne(doc);
+  if(op=="uploadImage") collection.insertOne(doc);
+}
+
+//Delete
+exports.deleteData = function (op,col,doc){
+  var collection = db.collection(col);
+  collection.deleteOne(doc);
+  
+  return res;
 }

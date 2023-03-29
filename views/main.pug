@@ -6,6 +6,7 @@ html
         link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css")
         link(rel='stylesheet', href='/views/css/main.css')
         script(src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=52kirtllzz")
+        script(type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=52kirtllzz&submodules=geocoder")
     body
         i#menu.list.icon.big(onclick="clickMenu()" style="visibility:visible")
         #div_sideBar.ui.left.demo.vertical.inverted.sidebar.labeled.icon.menu
@@ -21,20 +22,22 @@ html
         center
             H1= title 
             input#img_name(type='hidden', value=name)
+            P 
+            input.ui.button.mini(type="file", id="uploadImg", name="uploadImg")
+            button.ui.button.active(onclick="showMap()")
+                i.upload.icon
             P
             each photo in photos 
-                input(name='time' type='hidden', value=photo.time)
-                input(name='latitude' type='hidden', value=photo.latitude)
-                input(name='longitude' type='hidden', value=photo.longitude)
-                input(name='fileUrl' type='hidden', value=photo.fileUrl)
+                img(src=photo.link,width="80%")
+                .bold.center= photo.address
+                if photo.deviceID===deviceID || deviceID==="5bee79fe6e63b7e26ddec58286a622a975983bee46f96830450de77f1c2c4dc4"
+                    button.ui.mini.button(id=photo.createTm,onclick="deleteImage(this)") 삭제
             P
-            #map(style="width:380px;height:380px;")
-            //-img#img_main(src="/images/"+file onclick="change()")
-            P 
-            input(type="file" onChange="uploadFile(event)")
-            P
-            img#uploaded(src="https://upcdn.io/12a1xpG4qrAHUuVMXt5z3p6" style="width:380px;")
             input(type='hidden' id='deviceID' value=deviceID)
+        .ui.modal(tabindex="0") 
+                .content
+                    H3.center 어디서 찍은 사진이냥?
+                    #map(style="width:320px;height:320px;")
     script(src="//code.jquery.com/jquery-1.11.0.min.js")
     script(src="https://js.upload.io/upload-js/v1")
     script(src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js")

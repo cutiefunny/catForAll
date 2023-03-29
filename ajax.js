@@ -4,12 +4,19 @@ const CRUD= require("./CRUD");
 
 exports.controller = function(req,res,next) {
     
-    if(req.body.op=="upload"){
-        console.log("upload Image");
-        var doc = { latitude : req.body.latitude, longitude : req.body.longitude , deviceID : req.body.deviceID , fileUrl : req.body.fileUrl , fileId : req.body.fileId, time : moment().format('YYYYMMDDHHmm') };    
+    if(req.body.op=="uploadImage"){
+        var doc = { lat : req.body.lat, 
+                    long : req.body.long , 
+                    deviceID : req.body.deviceID , 
+                    link : req.body.link , 
+                    deletehash : req.body.deletehash, 
+                    createTm : req.body.createTm, 
+                    address : req.body.address };    
         CRUD.createData(req.body.op,"info",doc);
-        res.send({result:req.body.op,fileUrl:req.body.fileUrl});
-    }else if(req.body.op=="face1"){
-        res.send({result:req.body.op,msg:"face1"});
+        res.send({result:req.body.op,link:req.body.link});
+    }else if(req.body.op=="deleteImage"){
+        var filter = { createTm : req.body.createTm };   
+        CRUD.deleteData(req.body.op,"info",filter);
+        res.send({result:req.body.op});
     }
 }

@@ -1,13 +1,12 @@
+//네이버맵 클라이언트ID : 52kirtllzz
+//네이버맵 클라이언트secret : F638yjejakxPImMRy9PaIaFjdwQ1IXFUEIgSmebS
+
 //#region 엘리먼트를 변수로 선언
 var menu = document.getElementById("menu");
 var div_sideBar = document.getElementById("div_sideBar");
 var img_main = document.getElementById("img_main");
 var img_name = document.getElementById("img_name");
 var uploaded = document.getElementById("uploaded");
-var time = document.getElementsByName("time");
-var lat = document.getElementsByName("latitude");
-var long = document.getElementsByName("longitude");
-var url = document.getElementsByName("fileUrl");
 var deviceID = document.getElementById("deviceID").getAttribute('value');
 //#endregion
 
@@ -15,13 +14,14 @@ var deviceID = document.getElementById("deviceID").getAttribute('value');
 window.onload = function(){
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation);
+
     } else {
         var center = map.getCenter();
-        infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
+        //infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
         infowindow.open(map, center);
     }
     
-    setMarkers(time,lat,long,url);
+    //setMarkers(time,lat,long,url);
     
 };
 
@@ -30,22 +30,42 @@ function clickMenu(){ $('.ui.labeled.icon.sidebar').sidebar('toggle'); }
 function change(){ callAjax("change") }
 function clickThumb(src){ img_main.setAttribute("src",src); }
 function clickNext(name) { alert(name); }
+function showMap(){ $('.ui.modal').modal('show'); }
 
-const upload = new Upload({
-    // This is your API key:
-    apiKey: "public_12a1xpGGbbJh2u6J1eqbru3zEWSp"
-})
+function uploadImage(lat,long,address){
+    const fileInput = document.getElementById("uploadImg");
+    const upload = (file) => {
+        if (file && file.size < 5000000) {
+            const formData = new FormData();
+            
+            formData.append("image", file);
+            fetch("https://api.imgur.com/3/image", {
+                method: "POST",
+                headers: {
+                    Authorization: "Client-ID ff70f4ca94ef095",
+                    Accept: "application/json",
+                },
+                body: formData,
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    console.log(response.data);
+                    callAjaxImage("uploadImage",{link:response.data.link,deletehash:response.data.deletehash,createTm:new Date().YYYYMMDDHHMMSS(),lat:lat,long:long,address:address,deviceID:deviceID}) 
+                });
+        } else {
+            console.error("파일 용량 초과");
+        }
+    };
 
-const uploadFile = upload.createFileInputHandler({
-    onUploaded: ({ fileUrl, fileId }) => {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-            callAjax("upload",pos.coords.latitude, pos.coords.longitude, deviceID,fileUrl,fileId);
-            //latitude,longitude,deviceID,fileUrl,fileId
-        });
-        //alert(`File uploaded! ${fileUrl}`);
-        //uploaded.setAttribute("src",fileUrl);
+    upload(fileInput.files[0]);
+}
+
+function deleteImage(obj){
+    if(confirm("삭제하실거냥?")){
+        var createTm = obj.getAttribute("id");
+        callAjaxImage("deleteImage",createTm);
     }
-});
+}
 
 let markers = new Array();
 
@@ -64,12 +84,7 @@ function onSuccessGeolocation(position) {
                                          position.coords.longitude);
 
     map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
-    map.setZoom(10); // 지도의 줌 레벨을 변경합니다.
-
-    //infowindow.setContent('<div style="padding:20px;">' + 'geolocation.getCurrentPosition() 위치' + '</div>');
-
-    //infowindow.open(map, location);
-    console.log('Coordinates: ' + location.toString());
+    map.setZoom(14); // 지도의 줌 레벨을 변경합니다.
 }
 
 function onErrorGeolocation() {
@@ -81,6 +96,31 @@ function onErrorGeolocation() {
     infowindow.open(map, center);
 }
 
+naver.maps.Event.addListener(map, 'zoom_changed', function (zoom) {
+    //console.log('zoom:' + zoom);
+    //markers = [];
+    //setMarkers(time,lat,long,url);
+});
+
+naver.maps.Event.addListener(map, 'click', function(e){
+	//alert(e.coord.lat() + ', ' + e.coord.lng());
+
+    naver.maps.Service.reverseGeocode({
+        location: new naver.maps.LatLng(e.coord.lat(), e.coord.lng()),
+    }, function(status, response) {
+        if (status !== naver.maps.Service.Status.OK) {
+            return alert(status);
+        }
+
+        var result = response.result, // 검색 결과의 컨테이너
+            items = result.items; // 검색 결과의 배열
+
+        if(confirm(items[1].address)){
+            uploadImage(e.coord.lat(),e.coord.lng(),items[1].address);
+        }
+    });
+});
+
 function setMarkers(time,lat,long,url){
     var cnt = 0;
     time.forEach(element => {
@@ -90,7 +130,7 @@ function setMarkers(time,lat,long,url){
             position: position.destinationPoint(0, 0),
             map: map,
             icon: {
-                url: url[cnt].getAttribute("value"),
+                url: "https://i.imgur.com/6qUJ3uP.jpg",
                 // scaledSize: new naver.maps.Size(50, 52),
                 scaledSize: new naver.maps.Size(map.zoom*3, map.zoom*3),
                 origin: new naver.maps.Point(0, 0),
@@ -99,8 +139,27 @@ function setMarkers(time,lat,long,url){
         };
         
         var marker = new naver.maps.Marker(markerOptions);
-        
         markers.push(marker);
         cnt++;
     });
 }
+
+//Date format 정리 함수
+Date.prototype.YYYYMMDDHHMMSS = function () {
+    var yyyy = this.getFullYear().toString();
+    var MM = pad(this.getMonth() + 1,2);
+    var dd = pad(this.getDate(), 2);
+    var hh = pad(this.getHours(), 2);
+    var mm = pad(this.getMinutes(), 2)
+    var ss = pad(this.getSeconds(), 2)
+  
+    return yyyy +  MM + dd+  hh + mm + ss;
+  };
+  
+  function pad(number, length) {
+    var str = '' + number;
+    while (str.length < length) {
+      str = '0' + str;
+    }
+    return str;
+  }

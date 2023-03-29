@@ -14,24 +14,11 @@ exports.main = function(req,res) {
     CRUD.searchData("getPhotos","info").then(photos=>{
         console.log(photos);
             res.render('main', { 
-            title: 'cat for all'
+            title: '고양이 탐정단'
             , photos : photos
-            , tags : "no tags"
             , deviceID : id
         });
     });
-
-    // fs.readdir(__dirname+'/images/', function(err,fileList){
-    //     var name = getCat(fileList);
-    //     console.log(fileList);
-    //         res.render('main', { 
-    //             title: 'cat for all'
-    //             , filelist : fileList
-    //             , name : name
-    //             , tags : "no tags"
-    //             , deviceID : id
-    //         });
-    // });
 }
 
 function getCat(fileList){
