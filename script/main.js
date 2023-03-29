@@ -104,7 +104,7 @@ naver.maps.Event.addListener(map, 'zoom_changed', function (zoom) {
 
 naver.maps.Event.addListener(map, 'click', function(e){
 	//alert(e.coord.lat() + ', ' + e.coord.lng());
-
+    
     naver.maps.Service.reverseGeocode({
         location: new naver.maps.LatLng(e.coord.lat(), e.coord.lng()),
     }, function(status, response) {
