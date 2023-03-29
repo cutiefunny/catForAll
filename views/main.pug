@@ -32,6 +32,7 @@ html
                 .bold.center= photo.address
                 if photo.deviceID===deviceID || deviceID==="5bee79fe6e63b7e26ddec58286a622a975983bee46f96830450de77f1c2c4dc4"
                     button.ui.mini.button(id=photo.createTm,onclick="deleteImage(this)") 삭제
+                P
             P
             input(type='hidden' id='deviceID' value=deviceID)
         .ui.modal(tabindex="0") 
