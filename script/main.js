@@ -18,7 +18,7 @@ window.onload = function(){
     } else {
         var center = map.getCenter();
         //infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
-        infowindow.open(map, center);
+        //infowindow.open(map, center);
     }
     
     //setMarkers(time,lat,long,url);
