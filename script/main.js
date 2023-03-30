@@ -94,10 +94,10 @@ function onSuccessGeolocation(position) {
 function onErrorGeolocation() {
     var center = map.getCenter();
 
-    infowindow.setContent('<div style="padding:20px;">' +
-        '<h5 style="margin-bottom:5px;color:#f00;">Geolocation failed!</h5>'+ "latitude: "+ center.lat() +"<br />longitude: "+ center.lng() +'</div>');
+    // infowindow.setContent('<div style="padding:20px;">' +
+    //     '<h5 style="margin-bottom:5px;color:#f00;">Geolocation failed!</h5>'+ "latitude: "+ center.lat() +"<br />longitude: "+ center.lng() +'</div>');
 
-    infowindow.open(map, center);
+    // infowindow.open(map, center);
 }
 
 naver.maps.Event.addListener(map, 'zoom_changed', function (zoom) {
