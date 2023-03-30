@@ -20,9 +20,9 @@ window.onload = function(){
 function test(){
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation,{
-            enableHighAccuracy: true,
-            timeout: 30000,
-            maximumAge: 30000
+            maximumAge : Infinity,
+            timeout : 10000,
+            enableHighAccuracy : false
           });
     } else {
         var center = map.getCenter();
