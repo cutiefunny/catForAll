@@ -12,29 +12,41 @@ var deviceID = document.getElementById("deviceID").getAttribute('value');
 
 //페이지 시작 시 수행되는 함수
 window.onload = function(){
+    
+    //setMarkers(time,lat,long,url);
+    
+};
+
+function test(){
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation,{
             enableHighAccuracy: true,
             timeout: 30000,
             maximumAge: 30000
           });
-
     } else {
         var center = map.getCenter();
-        //infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
-        //infowindow.open(map, center);
     }
-    
-    //setMarkers(time,lat,long,url);
-    
-};
+}
 
 //메뉴 클릭
 function clickMenu(){ $('.ui.labeled.icon.sidebar').sidebar('toggle'); }
 function change(){ callAjax("change") }
 function clickThumb(src){ img_main.setAttribute("src",src); }
 function clickNext(name) { alert(name); }
-function showMap(){ $('.ui.modal').modal('show'); }
+
+function showMap(){ 
+    $('.ui.modal').modal('show'); 
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation,{
+            enableHighAccuracy: true,
+            timeout: 30000,
+            maximumAge: 30000
+          });
+    } else {
+        var center = map.getCenter();
+    }
+}
 
 function uploadImage(lat,long,address){
     const fileInput = document.getElementById("uploadImg");
@@ -84,6 +96,7 @@ var map = new naver.maps.Map('map', {
 var infowindow = new naver.maps.InfoWindow();
 
 function onSuccessGeolocation(position) {
+    alert(position.coords.latitude);
     var location = new naver.maps.LatLng(position.coords.latitude,
                                          position.coords.longitude);
 
@@ -92,6 +105,7 @@ function onSuccessGeolocation(position) {
 }
 
 function onErrorGeolocation() {
+    alert("error");
     var center = map.getCenter();
 
     // infowindow.setContent('<div style="padding:20px;">' +
