@@ -29,15 +29,7 @@ function clickNext(name) { alert(name); }
 
 function showMap(){ 
     $('.ui.modal').modal('show'); 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation,{
-            enableHighAccuracy: true,
-            timeout: 30000,
-            maximumAge: 30000
-          });
-    } else {
-        var center = map.getCenter();
-    }
+    tryAPIGeolocation();
 }
 
 function uploadImage(lat,long,address){
@@ -88,7 +80,7 @@ var map = new naver.maps.Map('map', {
 var infowindow = new naver.maps.InfoWindow();
 
 function onSuccessGeolocation(position) {
-    alert(position.coords.latitude);
+    //alert(position.coords.latitude);
     var location = new naver.maps.LatLng(position.coords.latitude,
                                          position.coords.longitude);
 
@@ -180,7 +172,11 @@ Date.prototype.YYYYMMDDHHMMSS = function () {
   /////////////////
 
   var apiGeolocationSuccess = function(position) {
-    alert("API geolocation success!\n\nlat = " + position.coords.latitude + "\nlng = " + position.coords.longitude);
+    //alert("API geolocation success!\n\nlat = " + position.coords.latitude + "\nlng = " + position.coords.longitude);
+    var location = new naver.maps.LatLng(position.coords.latitude,position.coords.longitude);
+
+        map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
+        map.setZoom(14); // 지도의 줌 레벨을 변경합니다.
 };
 
 var tryAPIGeolocation = function() {
