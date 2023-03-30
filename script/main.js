@@ -18,15 +18,7 @@ window.onload = function(){
 };
 
 function test(){
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation,{
-            maximumAge : Infinity,
-            timeout : 10000,
-            enableHighAccuracy : false
-          });
-    } else {
-        var center = map.getCenter();
-    }
+    tryAPIGeolocation();
 }
 
 //메뉴 클릭
@@ -181,3 +173,23 @@ Date.prototype.YYYYMMDDHHMMSS = function () {
     }
     return str;
   }
+
+
+
+
+  /////////////////
+
+  var apiGeolocationSuccess = function(position) {
+    alert("API geolocation success!\n\nlat = " + position.coords.latitude + "\nlng = " + position.coords.longitude);
+};
+
+var tryAPIGeolocation = function() {
+    jQuery.post( "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDg_JUjAG9yeU26I7C6rN8COtqH4EHBsw8", function(success) {
+        apiGeolocationSuccess({coords: {latitude: success.location.lat, longitude: success.location.lng}});
+        //AIzaSyDg_JUjAG9yeU26I7C6rN8COtqH4EHBsw8
+  })
+  .fail(function(err) {
+    alert("API Geolocation error! \n\n"+err);
+    console.log(err);
+  });
+};
