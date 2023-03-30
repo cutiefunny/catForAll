@@ -13,7 +13,11 @@ var deviceID = document.getElementById("deviceID").getAttribute('value');
 //페이지 시작 시 수행되는 함수
 window.onload = function(){
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation);
+        navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation,{
+            enableHighAccuracy: true,
+            timeout: 30000,
+            maximumAge: 30000
+          });
 
     } else {
         var center = map.getCenter();
