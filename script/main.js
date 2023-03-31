@@ -34,7 +34,7 @@ var infowindow = new naver.maps.InfoWindow();
 window.onload = function(){
 
     photos.forEach(photo => {
-        setMarker2(photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1],photo.getAttribute("value").split("+")[2]);
+        setMarker2(photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1],photo.getAttribute("value").split("+")[2],photo.getAttribute("value").split("+")[4],photo.getAttribute("value").split("+")[5],photo.getAttribute("id"));
     });
 
     showNearPhoto();
@@ -224,7 +224,7 @@ function setMarker(lat,long){
     marker = new naver.maps.Marker(markerOptions);
 }
 
-function setMarker2(lat,long,link){
+function setMarker2(lat,long,link,deleteHash,deviceID2,id2){
     position = new naver.maps.LatLng(lat, long);
 
     var markerOptions = {
@@ -233,9 +233,13 @@ function setMarker2(lat,long,link){
     };
     
     marker2 = new naver.maps.Marker(markerOptions);
-    naver.maps.Event.addListener(marker2, 'click', function(){ clickMarker(link); });
+    naver.maps.Event.addListener(marker2, 'click', function(){ clickMarker(link,deleteHash,deviceID2,id2); });
 }
 
-function clickMarker(link){
-    $("#nearPhoto").html("<img src='"+link+"' width='100%'>");
+function clickMarker(link,deleteHash,deviceID2,id2){
+    var html="<img src='"+link+"' width='100%'>";
+    if(deviceID2==deviceID) {
+        html+="<P><button class='ui button mini', onclick='deleteImage(\""+id2+"\")'> 삭제"
+    }
+    $("#nearPhoto").html(html);
 }

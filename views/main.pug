@@ -21,7 +21,7 @@ html
             //- .ui.pointing.below.label(style="opacity:100%;",onclick="hideLabel('label1')") PHOTO
             #nearPhoto
             each photo in photos 
-                input(type="hidden",id=photo.createTm,name="photo",value=photo.lat+'+'+photo.long+'+'+photo.link+'+'+photo.address)
+                input(type="hidden",id=photo.createTm,name="photo",value=photo.lat+'+'+photo.long+'+'+photo.link+'+'+photo.address+'+'+photo.deleteHash+'+'+photo.deviceID)
             //-     img(src=photo.link,id=photo.lat,name=photo.long,width="33%",onclick="imageClick(this)")
                 //- .bold.center= photo.address
                 //- if photo.deviceID===deviceID || deviceID==="5bee79fe6e63b7e26ddec58286a622a975983bee46f96830450de77f1c2c4dc4"
