@@ -121,6 +121,7 @@ naver.maps.Event.addListener(map, 'click', function(e){
             items = result.items; // 검색 결과의 배열
 
         if(confirm(items[1].address+"\n이 위치가 맞냥?")){
+            $("#mod").html("uploding...");  
             uploadImage(e.coord.lat(),e.coord.lng(),items[1].address);
         }
     });
