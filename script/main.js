@@ -91,7 +91,7 @@ function showNearPhoto(){
     photos.forEach(photo => {
         if( getDistanceFromLatLonInKm(map2.getCenter().y,map2.getCenter().x,photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1]) < 2 ){
             html+="<img src='"+photo.getAttribute("value").split("+")[2]+"' width='33%'>";
-            setMarker2(photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1]);
+            setMarker2(photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1],photo.getAttribute("value").split("+")[2]);
         }
     });
     $("#nearPhoto").html(html);
@@ -218,7 +218,7 @@ function setMarker(lat,long){
     marker = new naver.maps.Marker(markerOptions);
 }
 
-function setMarker2(lat,long){
+function setMarker2(lat,long,link){
     position = new naver.maps.LatLng(lat, long);
 
     var markerOptions = {
@@ -227,4 +227,9 @@ function setMarker2(lat,long){
     };
     
     marker2 = new naver.maps.Marker(markerOptions);
+    naver.maps.Event.addListener(marker2, 'click', function(){ clickMarker(link); });
+}
+
+function clickMarker(link){
+    $("#nearPhoto").html("<img src='"+link+"' width='100%'>");
 }

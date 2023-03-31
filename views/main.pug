@@ -18,7 +18,7 @@ html
                 i.upload.icon
                 |이미지 업로드
             P
-            .ui.pointing.below.label(style="opacity:100%;",onclick="hideLabel('label1')") 근처의 고양이들
+            //- .ui.pointing.below.label(style="opacity:100%;",onclick="hideLabel('label1')") PHOTO
             #nearPhoto
             each photo in photos 
                 input(type="hidden",id=photo.createTm,name="photo",value=photo.lat+'+'+photo.long+'+'+photo.link+'+'+photo.address)
