@@ -8,33 +8,24 @@ html
         script(src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=52kirtllzz")
         script(type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=52kirtllzz&submodules=geocoder")
     body
-        i#menu.list.icon.big(onclick="clickMenu()" style="visibility:visible")
-        #div_sideBar.ui.left.demo.vertical.inverted.sidebar.labeled.icon.menu
-            a.item
-                i.home.icon
-                Home
-            a.item
-                i.block.layout.icon
-                Topics
-            a.item
-                i.smile.icon
-                Friends
         center
             H1= title 
             P
-            #map2(style="width:380px;height:380px;")
+            #map2(style="width:380px;height:300px;")
             P
             input.ui.button.mini(type="file", id="uploadImg", name="uploadImg",style="display:none",onchange="showMap()")
             button.ui.button.active(onclick="clickUpload()")
                 i.upload.icon
                 |이미지 업로드
             P
+            .ui.pointing.below.label(style="opacity:100%;",onclick="hideLabel('label1')") 근처의 고양이들
+            #nearPhoto
             each photo in photos 
-                img(src=photo.link,width="80%")
-                .bold.center= photo.address
-                if photo.deviceID===deviceID || deviceID==="5bee79fe6e63b7e26ddec58286a622a975983bee46f96830450de77f1c2c4dc4"
-                    button.ui.mini.button(id=photo.createTm,onclick="deleteImage(this)") 삭제
-                P
+                input(type="hidden",id=photo.createTm,name="photo",value=photo.lat+'+'+photo.long+'+'+photo.link+'+'+photo.address)
+            //-     img(src=photo.link,id=photo.lat,name=photo.long,width="33%",onclick="imageClick(this)")
+                //- .bold.center= photo.address
+                //- if photo.deviceID===deviceID || deviceID==="5bee79fe6e63b7e26ddec58286a622a975983bee46f96830450de77f1c2c4dc4"
+                //-     button.ui.mini.button(id=photo.createTm,onclick="deleteImage(this)") 삭제
             P
             input(type='hidden' id='deviceID' value=deviceID)
         .ui.modal(tabindex="0") 

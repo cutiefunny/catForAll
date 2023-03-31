@@ -2,9 +2,8 @@
 //네이버맵 클라이언트secret : F638yjejakxPImMRy9PaIaFjdwQ1IXFUEIgSmebS
 
 //#region 엘리먼트를 변수로 선언
-var menu = document.getElementById("menu");
-var div_sideBar = document.getElementById("div_sideBar");
 var deviceID = document.getElementById("deviceID").getAttribute('value');
+var photos = document.getElementsByName("photo");
 //#endregion
 
 //#region 네이버맵 api 선언부
@@ -26,14 +25,14 @@ var map2 = new naver.maps.Map('map2', {
 
 var marker = new naver.maps.Marker({position: new naver.maps.LatLng(37.5569527, 126.9240634).destinationPoint(0, 0),map: map});
 
-//var marker2 = new naver.maps.Marker({position: new naver.maps.LatLng(37.5569527, 126.9240634).destinationPoint(0, 0),map: map2});
+var marker2 = new naver.maps.Marker({position: new naver.maps.LatLng(37.5569527, 126.9240634).destinationPoint(0, 0),map: map2});
 
 var infowindow = new naver.maps.InfoWindow();
 //#endregion
 
 //페이지 시작 시 수행되는 함수
 window.onload = function(){
-    
+    showNearPhoto();
     //setMarkers(time,lat,long,url);
     
 };
@@ -85,10 +84,21 @@ function deleteImage(obj){
     }
 }
 
-naver.maps.Event.addListener(map, 'zoom_changed', function (zoom) {
-    //console.log('zoom:' + zoom);
-    //markers = [];
-    //setMarkers(time,lat,long,url);
+//2km 이내의 사진 로드
+function showNearPhoto(){
+    var html = "";
+    marker2.setMap(null);
+    photos.forEach(photo => {
+        if( getDistanceFromLatLonInKm(map2.getCenter().y,map2.getCenter().x,photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1]) < 2 ){
+            html+="<img src='"+photo.getAttribute("value").split("+")[2]+"' width='33%'>";
+            setMarker2(photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1]);
+        }
+    });
+    $("#nearPhoto").html(html);
+}
+
+naver.maps.Event.addListener(map2, 'dragend', function () {
+    showNearPhoto();
 });
 
 naver.maps.Event.addListener(map, 'click', function(e){
@@ -154,7 +164,26 @@ Date.prototype.YYYYMMDDHHMMSS = function () {
     return str;
   }
 
+  //경도 위도로 거리계산 함수
+  function getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2) {
+    function deg2rad(deg) {
+        return deg * (Math.PI/180)
+    }
 
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2-lat1);  // deg2rad below
+    var dLon = deg2rad(lng2-lng1);
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c; // Distance in km
+    return d;
+}
+
+function imageClick(obj){
+    var lat=obj.getAttribute("id");
+    var long=obj.getAttribute("name");
+    alert(getDistanceFromLatLonInKm(map2.getCenter().y,map2.getCenter().x,lat,long));
+}
 
 
   /////////////////
@@ -187,4 +216,15 @@ function setMarker(lat,long){
     };
     
     marker = new naver.maps.Marker(markerOptions);
+}
+
+function setMarker2(lat,long){
+    position = new naver.maps.LatLng(lat, long);
+
+    var markerOptions = {
+        position: position.destinationPoint(0, 0),
+        map: map2
+    };
+    
+    marker2 = new naver.maps.Marker(markerOptions);
 }
