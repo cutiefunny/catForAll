@@ -77,6 +77,8 @@ var map = new naver.maps.Map('map', {
     mapTypeId: naver.maps.MapTypeId.NORMAL
 });
 
+var marker = new naver.maps.Marker({position: new naver.maps.LatLng(37.5666805, 126.9784147).destinationPoint(0, 0),map: map});
+
 var infowindow = new naver.maps.InfoWindow();
 
 function onSuccessGeolocation(position) {
@@ -105,8 +107,9 @@ naver.maps.Event.addListener(map, 'zoom_changed', function (zoom) {
 });
 
 naver.maps.Event.addListener(map, 'click', function(e){
-	//alert(e.coord.lat() + ', ' + e.coord.lng());
-    
+
+    marker.setMap(null);
+    setMarker(e.coord.lat(),e.coord.lng())
     naver.maps.Service.reverseGeocode({
         location: new naver.maps.LatLng(e.coord.lat(), e.coord.lng()),
     }, function(status, response) {
@@ -117,7 +120,7 @@ naver.maps.Event.addListener(map, 'click', function(e){
         var result = response.result, // 검색 결과의 컨테이너
             items = result.items; // 검색 결과의 배열
 
-        if(confirm(items[1].address)){
+        if(confirm("이 위치가 맞냥?")){
             uploadImage(e.coord.lat(),e.coord.lng(),items[1].address);
         }
     });
@@ -131,13 +134,13 @@ function setMarkers(time,lat,long,url){
         var markerOptions = {
             position: position.destinationPoint(0, 0),
             map: map,
-            icon: {
-                url: "https://i.imgur.com/6qUJ3uP.jpg",
-                // scaledSize: new naver.maps.Size(50, 52),
-                scaledSize: new naver.maps.Size(map.zoom*3, map.zoom*3),
-                origin: new naver.maps.Point(0, 0),
-                anchor: new naver.maps.Point(25, 26)
-            }
+            // icon: {
+            //     url: "https://i.imgur.com/6qUJ3uP.jpg",
+            //     // scaledSize: new naver.maps.Size(50, 52),
+            //     scaledSize: new naver.maps.Size(map.zoom*3, map.zoom*3),
+            //     origin: new naver.maps.Point(0, 0),
+            //     anchor: new naver.maps.Point(25, 26)
+            // }
         };
         
         var marker = new naver.maps.Marker(markerOptions);
@@ -174,9 +177,8 @@ Date.prototype.YYYYMMDDHHMMSS = function () {
   var apiGeolocationSuccess = function(position) {
     //alert("API geolocation success!\n\nlat = " + position.coords.latitude + "\nlng = " + position.coords.longitude);
     var location = new naver.maps.LatLng(position.coords.latitude,position.coords.longitude);
-        alert(position.coords.latitude);
         map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
-        map.setZoom(14); // 지도의 줌 레벨을 변경합니다.
+        map.setZoom(15); // 지도의 줌 레벨을 변경합니다.
 };
 
 var tryAPIGeolocation = function() {
@@ -189,3 +191,14 @@ var tryAPIGeolocation = function() {
     console.log(err);
   });
 };
+
+function setMarker(lat,long){
+    position = new naver.maps.LatLng(lat, long);
+
+    var markerOptions = {
+        position: position.destinationPoint(0, 0),
+        map: map
+    };
+    
+    marker = new naver.maps.Marker(markerOptions);
+}
