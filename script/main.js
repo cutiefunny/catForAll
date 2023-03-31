@@ -68,12 +68,12 @@ let markers = new Array();
 var HOME_PATH = window.HOME_PATH || '.';
 
 var map = new naver.maps.Map('map', {
-    center: new naver.maps.LatLng(37.5666805, 126.9784147),
+    center: new naver.maps.LatLng(37.5569527, 126.9240634),
     zoom: 10,
     mapTypeId: naver.maps.MapTypeId.NORMAL
 });
 
-var marker = new naver.maps.Marker({position: new naver.maps.LatLng(37.5666805, 126.9784147).destinationPoint(0, 0),map: map});
+var marker = new naver.maps.Marker({position: new naver.maps.LatLng(37.5569527, 126.9240634).destinationPoint(0, 0),map: map});
 
 var infowindow = new naver.maps.InfoWindow();
 
