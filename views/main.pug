@@ -10,13 +10,13 @@ html
     body
         center
             H1= title 
-            P
-            #map2(style="width:380px;height:300px;")
-            P
-            input.ui.button.mini(type="file", id="uploadImg", name="uploadImg",style="display:none",onchange="showMap()")
-            button.ui.button.active(onclick="clickUpload()")
+            button.ui.button.mini(onclick="clickUpload()")
                 i.upload.icon
                 |이미지 업로드
+            P
+            #map2(style="width:380px;height:280px;")
+            P
+            input.ui.button.mini(type="file", id="uploadImg", name="uploadImg",style="display:none",onchange="showMap()")
             P
             //- .ui.pointing.below.label(style="opacity:100%;",onclick="hideLabel('label1')") PHOTO
             #nearPhoto
