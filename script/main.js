@@ -32,6 +32,11 @@ var infowindow = new naver.maps.InfoWindow();
 
 //페이지 시작 시 수행되는 함수
 window.onload = function(){
+
+    photos.forEach(photo => {
+        setMarker2(photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1],photo.getAttribute("value").split("+")[2]);
+    });
+
     showNearPhoto();
     //setMarkers(time,lat,long,url);
     
@@ -87,11 +92,11 @@ function deleteImage(obj){
 //2km 이내의 사진 로드
 function showNearPhoto(){
     var html = "";
-    marker2.setMap(null);
+    //marker2.setMap(null);
     photos.forEach(photo => {
         if( getDistanceFromLatLonInKm(map2.getCenter().y,map2.getCenter().x,photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1]) < 2 ){
             html+="<img src='"+photo.getAttribute("value").split("+")[2]+"' width='33%'>";
-            setMarker2(photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1],photo.getAttribute("value").split("+")[2]);
+            //setMarker2(photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1],photo.getAttribute("value").split("+")[2]);
         }
     });
     $("#nearPhoto").html(html);
