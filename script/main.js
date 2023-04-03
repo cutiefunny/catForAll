@@ -25,7 +25,7 @@ var map2 = new naver.maps.Map('map2', {
 
 var marker = new naver.maps.Marker({position: new naver.maps.LatLng(37.5569527, 126.9240634).destinationPoint(0, 0),map: map});
 
-var marker2 = new naver.maps.Marker({position: new naver.maps.LatLng(37.5569527, 126.9240634).destinationPoint(0, 0),map: map2});
+var marker2 = new naver.maps.Marker();
 
 var infowindow = new naver.maps.InfoWindow();
 //#endregion
