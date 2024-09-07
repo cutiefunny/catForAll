@@ -2,25 +2,42 @@
 //네이버맵 클라이언트secret : F638yjejakxPImMRy9PaIaFjdwQ1IXFUEIgSmebS
 
 //#region 엘리먼트를 변수로 선언
-var menu = document.getElementById("menu");
-var div_sideBar = document.getElementById("div_sideBar");
-var img_main = document.getElementById("img_main");
-var img_name = document.getElementById("img_name");
-var uploaded = document.getElementById("uploaded");
 var deviceID = document.getElementById("deviceID").getAttribute('value');
+var photos = document.getElementsByName("photo");
+//#endregion
+
+//#region 네이버맵 api 선언부
+let markers = new Array();
+
+var HOME_PATH = window.HOME_PATH || '.';
+
+var map = new naver.maps.Map('map', {
+    center: new naver.maps.LatLng(37.5569527, 126.9240634),
+    zoom: 10,
+    mapTypeId: naver.maps.MapTypeId.NORMAL
+});
+
+var map2 = new naver.maps.Map('map2', {
+    center: new naver.maps.LatLng(37.5569527, 126.9240634),
+    zoom: 13,
+    mapTypeId: naver.maps.MapTypeId.NORMAL
+});
+
+var marker = new naver.maps.Marker({position: new naver.maps.LatLng(37.5569527, 126.9240634).destinationPoint(0, 0),map: map});
+
+var marker2 = new naver.maps.Marker();
+
+var infowindow = new naver.maps.InfoWindow();
 //#endregion
 
 //페이지 시작 시 수행되는 함수
 window.onload = function(){
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(onSuccessGeolocation, onErrorGeolocation);
 
-    } else {
-        var center = map.getCenter();
-        //infowindow.setContent('<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>');
-        //infowindow.open(map, center);
-    }
-    
+    photos.forEach(photo => {
+        setMarker2(photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1],photo.getAttribute("value").split("+")[2],photo.getAttribute("value").split("+")[4],photo.getAttribute("value").split("+")[5],photo.getAttribute("id"));
+    });
+
+    showNearPhoto();
     //setMarkers(time,lat,long,url);
     
 };
@@ -30,7 +47,12 @@ function clickMenu(){ $('.ui.labeled.icon.sidebar').sidebar('toggle'); }
 function change(){ callAjax("change") }
 function clickThumb(src){ img_main.setAttribute("src",src); }
 function clickNext(name) { alert(name); }
-function showMap(){ $('.ui.modal').modal('show'); }
+function clickUpload() { $("#uploadImg").click() }
+
+function showMap(){ 
+    $('.ui.modal').modal('show'); 
+    tryAPIGeolocation();
+}
 
 function uploadImage(lat,long,address){
     const fileInput = document.getElementById("uploadImg");
@@ -67,44 +89,27 @@ function deleteImage(obj){
     }
 }
 
-let markers = new Array();
-
-var HOME_PATH = window.HOME_PATH || '.';
-
-var map = new naver.maps.Map('map', {
-    center: new naver.maps.LatLng(37.5666805, 126.9784147),
-    zoom: 10,
-    mapTypeId: naver.maps.MapTypeId.NORMAL
-});
-
-var infowindow = new naver.maps.InfoWindow();
-
-function onSuccessGeolocation(position) {
-    var location = new naver.maps.LatLng(position.coords.latitude,
-                                         position.coords.longitude);
-
-    map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
-    map.setZoom(14); // 지도의 줌 레벨을 변경합니다.
+//2km 이내의 사진 로드
+function showNearPhoto(){
+    var html = "";
+    //marker2.setMap(null);
+    photos.forEach(photo => {
+        if( getDistanceFromLatLonInKm(map2.getCenter().y,map2.getCenter().x,photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1]) < 2 ){
+            html+="<img src='"+photo.getAttribute("value").split("+")[2]+"' width='33%'>";
+            //setMarker2(photo.getAttribute("value").split("+")[0],photo.getAttribute("value").split("+")[1],photo.getAttribute("value").split("+")[2]);
+        }
+    });
+    $("#nearPhoto").html(html);
 }
 
-function onErrorGeolocation() {
-    var center = map.getCenter();
-
-    infowindow.setContent('<div style="padding:20px;">' +
-        '<h5 style="margin-bottom:5px;color:#f00;">Geolocation failed!</h5>'+ "latitude: "+ center.lat() +"<br />longitude: "+ center.lng() +'</div>');
-
-    infowindow.open(map, center);
-}
-
-naver.maps.Event.addListener(map, 'zoom_changed', function (zoom) {
-    //console.log('zoom:' + zoom);
-    //markers = [];
-    //setMarkers(time,lat,long,url);
+naver.maps.Event.addListener(map2, 'dragend', function () {
+    showNearPhoto();
 });
 
 naver.maps.Event.addListener(map, 'click', function(e){
-	//alert(e.coord.lat() + ', ' + e.coord.lng());
-    
+
+    marker.setMap(null);
+    setMarker(e.coord.lat(),e.coord.lng())
     naver.maps.Service.reverseGeocode({
         location: new naver.maps.LatLng(e.coord.lat(), e.coord.lng()),
     }, function(status, response) {
@@ -115,7 +120,8 @@ naver.maps.Event.addListener(map, 'click', function(e){
         var result = response.result, // 검색 결과의 컨테이너
             items = result.items; // 검색 결과의 배열
 
-        if(confirm(items[1].address)){
+        if(confirm(items[1].address+"\n이 위치가 맞냥?")){
+            $("#mod").html("uploding...");  
             uploadImage(e.coord.lat(),e.coord.lng(),items[1].address);
         }
     });
@@ -129,13 +135,13 @@ function setMarkers(time,lat,long,url){
         var markerOptions = {
             position: position.destinationPoint(0, 0),
             map: map,
-            icon: {
-                url: "https://i.imgur.com/6qUJ3uP.jpg",
-                // scaledSize: new naver.maps.Size(50, 52),
-                scaledSize: new naver.maps.Size(map.zoom*3, map.zoom*3),
-                origin: new naver.maps.Point(0, 0),
-                anchor: new naver.maps.Point(25, 26)
-            }
+            // icon: {
+            //     url: "https://i.imgur.com/6qUJ3uP.jpg",
+            //     // scaledSize: new naver.maps.Size(50, 52),
+            //     scaledSize: new naver.maps.Size(map.zoom*3, map.zoom*3),
+            //     origin: new naver.maps.Point(0, 0),
+            //     anchor: new naver.maps.Point(25, 26)
+            // }
         };
         
         var marker = new naver.maps.Marker(markerOptions);
@@ -163,3 +169,77 @@ Date.prototype.YYYYMMDDHHMMSS = function () {
     }
     return str;
   }
+
+  //경도 위도로 거리계산 함수
+  function getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2) {
+    function deg2rad(deg) {
+        return deg * (Math.PI/180)
+    }
+
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2-lat1);  // deg2rad below
+    var dLon = deg2rad(lng2-lng1);
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c; // Distance in km
+    return d;
+}
+
+function imageClick(obj){
+    var lat=obj.getAttribute("id");
+    var long=obj.getAttribute("name");
+    alert(getDistanceFromLatLonInKm(map2.getCenter().y,map2.getCenter().x,lat,long));
+}
+
+
+  /////////////////
+
+  var apiGeolocationSuccess = function(position) {
+
+    var location = new naver.maps.LatLng(position.coords.latitude,position.coords.longitude);
+        map.setCenter(location); // 얻은 좌표를 지도의 중심으로 설정합니다.
+        map.setZoom(15); // 지도의 줌 레벨을 변경합니다.
+        marker.setMap(null);
+        //setMarker(position.coords.latitude,position.coords.longitude);
+};
+
+var tryAPIGeolocation = function() {
+    jQuery.post( "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDg_JUjAG9yeU26I7C6rN8COtqH4EHBsw8", function(success) {
+        apiGeolocationSuccess({coords: {latitude: success.location.lat, longitude: success.location.lng}});
+  })
+  .fail(function(err) {
+    alert("API Geolocation error! \n\n"+err);
+    console.log(err);
+  });
+};
+
+function setMarker(lat,long){
+    position = new naver.maps.LatLng(lat, long);
+
+    var markerOptions = {
+        position: position.destinationPoint(0, 0),
+        map: map
+    };
+    
+    marker = new naver.maps.Marker(markerOptions);
+}
+
+function setMarker2(lat,long,link,deleteHash,deviceID2,id2){
+    position = new naver.maps.LatLng(lat, long);
+
+    var markerOptions = {
+        position: position.destinationPoint(0, 0),
+        map: map2
+    };
+    
+    marker2 = new naver.maps.Marker(markerOptions);
+    naver.maps.Event.addListener(marker2, 'click', function(){ clickMarker(link,deleteHash,deviceID2,id2); });
+}
+
+function clickMarker(link,deleteHash,deviceID2,id2){
+    var html="<img src='"+link+"' width='100%'>";
+    if(deviceID2==deviceID) {
+        html+="<P><button class='ui button mini', onclick='deleteImage(\""+id2+"\")'> 삭제"
+    }
+    $("#nearPhoto").html(html);
+}

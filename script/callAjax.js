@@ -17,7 +17,7 @@ function callAjaxImage(op,data) {
         success: function(result) {
             //테스트
             if ( result['result'] == "uploadImage" ) {  
-                
+                 
             }
             location.reload();
         } //function끝
